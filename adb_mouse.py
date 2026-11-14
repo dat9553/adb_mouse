@@ -11,7 +11,9 @@ KEY_MAP = {
     keyboard.Key.down: ["shell", "input", "swipe", "540", "400", "540", "1600", "300"],
     keyboard.Key.enter: ["shell", "input", "tap", "540", "960"],
     keyboard.Key.page_down: ["shell", "input", "keyevent", "25"],
-}
+    keyboard.KeyCode.from_vk(103): ["shell", "input", "swipe", "540", "1400", "540", "200", "300"],  # Numpad 7
+    keyboard.KeyCode.from_vk(97):  ["shell", "input", "swipe", "540", "400", "540", "1600", "300"],  # Numpad 1
+    }
 
 hold_active = False
 right_pressed = False
