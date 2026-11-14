@@ -11,9 +11,14 @@ KEY_MAP = {
     keyboard.Key.down: ["shell", "input", "swipe", "540", "400", "540", "1600", "300"],
     keyboard.Key.enter: ["shell", "input", "tap", "540", "960"],
     keyboard.Key.page_down: ["shell", "input", "keyevent", "25"],
-    keyboard.KeyCode.from_vk(103): ["shell", "input", "swipe", "540", "1400", "540", "200", "300"],  # Numpad 7
-    keyboard.KeyCode.from_vk(97):  ["shell", "input", "swipe", "540", "400", "540", "1600", "300"],  # Numpad 1
-    }
+}
+
+# Dùng mã virtual-key để nhận diện Numpad 7/1, không phụ thuộc ký tự
+# mà pynput đính kèm (có thể thay đổi theo trạng thái NumLock).
+NUMPAD_KEY_MAP = {
+    103: ["shell", "input", "swipe", "540", "1400", "540", "200", "300"],  # Numpad 7
+    97: ["shell", "input", "swipe", "540", "400", "540", "1600", "300"],  # Numpad 1
+}
 
 hold_active = False
 right_pressed = False
@@ -42,11 +47,14 @@ def on_press(key):
         hold_active = not hold_active
         return
 
-    if key in KEY_MAP:
-        command = [ADB] + KEY_MAP[key]
+    command_args = KEY_MAP.get(key)
+    if command_args is None:
+        command_args = NUMPAD_KEY_MAP.get(getattr(key, "vk", None))
+
+    if command_args is not None:
+        command = [ADB] + command_args
         print("Executing:", command)
         subprocess.Popen(command)
-
     else:
         print("Unmapped key:", key)
 
